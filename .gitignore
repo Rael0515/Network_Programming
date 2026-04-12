@@ -1,0 +1,14 @@
+.vscode/
+*.exe
+hclient
+hserver
+lopen
+lread
+tclient
+tserver
+endian
+iaddr
+iaton
+intoa
+eclient
+eserver
