@@ -1,4 +1,5 @@
 .vscode/
+temp/
 *.exe
 hclient
 hserver
@@ -18,3 +19,7 @@ bhost1
 bhost2
 ueclient
 ueserver
+eclient2
+fclient
+fserver
+reserver

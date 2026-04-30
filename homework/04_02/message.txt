@@ -1,0 +1,9 @@
+Client: Hey
+Server: What
+
+Client: I want to go home right now
+Server: Ok
+
+Client: q
+Server: bye
+
