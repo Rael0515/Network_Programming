@@ -23,3 +23,6 @@ eclient2
 fclient
 fserver
 reserver
+test
+fork
+pipe2
