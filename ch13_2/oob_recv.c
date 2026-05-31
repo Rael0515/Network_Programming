@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <signal.h>
 
@@ -16,8 +16,14 @@ void error_handling(char *message)
     fputc('\n', stderr);
     exit(1);
 }
-
-void urg_handler(int signo);
+void urg_handler(int signo)
+{
+    int str_len;
+    char buf[BUF_SIZE];
+    str_len = recv(recv_sock, buf, sizeof(buf) - 1, MSG_OOB);
+    buf[str_len] = 0;
+    printf("Urgent message: %s\n", buf);
+}
 
 int acpt_sock;
 int recv_sock;
@@ -30,11 +36,12 @@ int main(int argc, char *argv[])
     struct sigaction act;
     char buf[BUF_SIZE];
 
-    if (argc != 2)
+    if (argc!=2)
     {
-        printf("Usage: %s (port>\n)", argv[0]);
+        printf("Usage: %s <IP> <port>\n", argv[0]);
         exit(1);
     }
+
     act.sa_handler = urg_handler;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
@@ -46,14 +53,15 @@ int main(int argc, char *argv[])
     recv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
     recv_adr.sin_port = htons(atoi(argv[1]));
 
-    if(bind(acpt_sock, (struct sockaddr*)&recv_adr,sizeof(recv_adr)) == -1)
+    if(bind(acpt_sock, (struct sockaddr*)&recv_adr, sizeof(recv_adr)) == -1)
         error_handling("bind() error");
     listen(acpt_sock, 5);
 
     serv_adr_sz = sizeof(serv_adr);
     recv_sock = accept(acpt_sock, (struct sockaddr*)&serv_adr, &serv_adr_sz);
-    //fcntl이 없음 허공에 데이터를 날림
-    //fcntl(recv_sock, F_SETOWN, getpid());
+
+    fcntl(recv_sock, F_SETOWN, getpid());
+
     state = sigaction(SIGURG, &act, 0);
 
     while((str_len = recv(recv_sock, buf, sizeof(buf), 0)) != 0)
@@ -69,11 +77,3 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void urg_handler(int signo)
-{
-    int str_len;
-    char buf[BUF_SIZE];
-    str_len = recv(recv_sock, buf, sizeof(buf)-1, MSG_OOB);
-    buf[str_len] = 0;
-    printf("Urgent message: %s\n", buf);
-}

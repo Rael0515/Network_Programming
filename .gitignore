@@ -29,3 +29,10 @@ pipe2
 recive.txt
 test.txt
 *.o
+serv
+clnt
+zombie
+waitpid
+rm_zombie
+signal
+sigaction
