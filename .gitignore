@@ -36,3 +36,13 @@ waitpid
 rm_zombie
 signal
 sigaction
+recv
+send
+readv
+write
+writev
+eclnt
+eserv
+pipe1
+pipe3
+select

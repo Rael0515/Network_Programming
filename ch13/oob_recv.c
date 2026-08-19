@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     serv_adr_sz = sizeof(serv_adr);
     recv_sock = accept(acpt_sock, (struct sockaddr*)&serv_adr, &serv_adr_sz);
     //fcntl이 없음 허공에 데이터를 날림
-    //fcntl(recv_sock, F_SETOWN, getpid());
+    fcntl(recv_sock, F_SETOWN, getpid());
     state = sigaction(SIGURG, &act, 0);
 
     while((str_len = recv(recv_sock, buf, sizeof(buf), 0)) != 0)
